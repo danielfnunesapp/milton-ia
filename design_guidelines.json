@@ -1,0 +1,286 @@
+{
+  "theme_strategy": {
+    "default_mode": "light",
+    "mode_support": ["light", "dark", "high-contrast"],
+    "rationale": "Edtech platform for Brazilian elementary (Anos Finais 6º-9º) and high school (Ensino Médio 1ª-3ª) students. Needs vibrant, encouraging Duolingo/Quizizz tactile energy combined with Khan Academy clarity, supporting daylight classroom visibility and nighttime study sessions with full dark mode and accessibility toolbar toggle."
+  },
+  "colors": {
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#F8FAFC",
+        "on_bg": "#0F172A",
+        "on_bg_muted": "#475569",
+        "roles": {
+          "link": "#1D4ED8",
+          "error": "#BE123C",
+          "success": "#047857",
+          "warning": "#B45309"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#0F172A",
+        "on_bg_muted": "#64748B",
+        "roles": {
+          "link": "#2563EB",
+          "error": "#DC2626",
+          "success": "#16A34A"
+        }
+      },
+      {
+        "name": "interactive_card",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#0F172A",
+        "on_bg_muted": "#64748B",
+        "border": "#E2E8F0",
+        "border_bottom": "#CBD5E1"
+      },
+      {
+        "name": "brand_emerald",
+        "kind": "solid",
+        "bg": "#10B981",
+        "on_bg": "#064E3B",
+        "on_bg_muted": "#065F46"
+      },
+      {
+        "name": "brand_violet",
+        "kind": "solid",
+        "bg": "#8B5CF6",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#EDE9FE"
+      },
+      {
+        "name": "brand_amber",
+        "kind": "solid",
+        "bg": "#F59E0B",
+        "on_bg": "#451A03",
+        "on_bg_muted": "#78350F"
+      },
+      {
+        "name": "brand_sky",
+        "kind": "solid",
+        "bg": "#0EA5E9",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#E0F2FE"
+      },
+      {
+        "name": "badge_xp",
+        "kind": "solid",
+        "bg": "#FEF3C7",
+        "on_bg": "#92400E",
+        "on_bg_muted": "#78350F"
+      },
+      {
+        "name": "badge_streak",
+        "kind": "solid",
+        "bg": "#FFEDD5",
+        "on_bg": "#9A3412",
+        "on_bg_muted": "#7C2D12"
+      },
+      {
+        "name": "badge_enem",
+        "kind": "solid",
+        "bg": "#EDE9FE",
+        "on_bg": "#5B21B6",
+        "on_bg_muted": "#4C1D95"
+      },
+      {
+        "name": "page_dark",
+        "kind": "solid",
+        "bg": "#0B0F19",
+        "on_bg": "#F8FAFC",
+        "on_bg_muted": "#94A3B8",
+        "roles": {
+          "link": "#60A5FA",
+          "error": "#F87171",
+          "success": "#34D399",
+          "warning": "#FBBF24"
+        }
+      },
+      {
+        "name": "panel_dark",
+        "kind": "solid",
+        "bg": "#131C2E",
+        "on_bg": "#F8FAFC",
+        "on_bg_muted": "#94A3B8"
+      },
+      {
+        "name": "hero",
+        "kind": "solid",
+        "bg": "#0F172A",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#CBD5E1",
+        "roles": {
+          "link": "#93C5FD",
+          "error": "#FCA5A5",
+          "success": "#6EE7B7"
+        }
+      },
+      {
+        "name": "high_contrast_page",
+        "kind": "solid",
+        "bg": "#000000",
+        "on_bg": "#FFFF00",
+        "on_bg_muted": "#00FFFF",
+        "roles": {
+          "link": "#00FFFF",
+          "error": "#FF5555",
+          "success": "#55FF55"
+        }
+      }
+    ],
+    "accent": "#6366F1",
+    "on_accent": "#FFFFFF",
+    "gamification": {
+      "xp_gold": "#F59E0B",
+      "streak_fire": "#EA580C",
+      "heart_ruby": "#EF4444",
+      "gem_cyan": "#06B6D4",
+      "mastery_emerald": "#10B981",
+      "ai_tutor_indigo": "#6366F1"
+    }
+  },
+  "typography": {
+    "font_family_heading": "Outfit, system-ui, sans-serif",
+    "font_family_body": "Plus Jakarta Sans, system-ui, sans-serif",
+    "font_family_mono": "JetBrains Mono, monospace",
+    "scale_px": {
+      "display": 56,
+      "h1": 42,
+      "h2": 32,
+      "h3": 24,
+      "h4": 20,
+      "body": 16,
+      "caption": 14,
+      "micro": 12
+    },
+    "accessibility_scale_multipliers": {
+      "normal": "100%",
+      "large": "115%",
+      "extra_large": "130%"
+    }
+  },
+  "entry_surfaces": {
+    "/": "gamified education portal landing with active student/teacher role switcher, school logo badge bar, quick stat counters and interactive preview of Trilhas BNCC & Missão ENEM",
+    "/login": "split branded auth screen — school branding & Milton I.A mission left, role-aware quick login form (Estudante / Professor / Gestor) right",
+    "/estudante": "student hub — Duolingo-inspired weekly quest bar top, circular Trilha step map center, Milton I.A Tutor floating launcher right, XP leaderboard widget side",
+    "/quiz": "gamified interactive quiz arena — progress bar with streak multiplier header, dynamic question card (multiple-choice/V-F/association/gap-fill), instant feedback modal with BNCC skill explainers",
+    "/enem": "Missão ENEM command room — countdown timer, 4 knowledge areas + Redação simulado cards with radar statistics and timer",
+    "/mural": "school multimedia feed with filter tags (tirinhas, vídeos curtos, infográficos, avisos), like/share interactions and admin quick-publisher",
+    "/tutor": "Milton I.A adaptive conversational learning assistant with grade-level picker (6º-9º, 1ª-3ª EM), prompt templates (Resumo, Explicar Simples, Criar Questões, Mapa Mental)",
+    "/professor": "educator workstation — quiz generator wizard, media manager, student analytics & class mastery gradebook",
+    "/gestor": "institutional management cockpit — school logo/name customization, real-time engagement rate, SEDUC-SP curriculum tracking & export tools"
+  },
+  "component_hierarchy": [
+    {
+      "path": "frontend/src/components/layout/Navbar.tsx",
+      "description": "Sticky top bar with customizable School Logo + School Name, prominent 'Milton I.A' badge, XP pills, Daily Streak flame counter, Accessibility Toolbar launcher, Theme toggle, and User Profile menu"
+    },
+    {
+      "path": "frontend/src/components/layout/AccessibilityBar.tsx",
+      "description": "Accessibility bar with font size scaler (A- / A / A+), High Contrast toggle (Preto/Amarelo WCAG AAA), Text-to-Speech (Leitura por Voz via Web Speech API), and Simplified Navigation mode"
+    },
+    {
+      "path": "frontend/src/components/student/ProgressOverview.tsx",
+      "description": "Student status banner with dynamic Level (e.g. Nível 7 - Explorador Cósmico), XP progress bar towards next level, 7/15/30-day streak indicator with fire animations, and unlocked Medals shelf"
+    },
+    {
+      "path": "frontend/src/components/student/TrilhasCurriculares.tsx",
+      "description": "Curricular learning paths organized by Grade (6º-9º Fundamental, 1ª-3ª EM), Bimester (1º ao 4º Bimestre), Subject (Matemática, Língua Portuguesa, Ciências, História, Geografia, etc.) tagged with BNCC & Currículo Paulista codes (e.g. EF09MA06, EM13LP01)"
+    },
+    {
+      "path": "frontend/src/components/quiz/QuizRunner.tsx",
+      "description": "Gamified Quiz Engine supporting: 1) Rápido (5 q's), 2) Completo (10 q's), 3) Desafio Master (20 q's). Formats: Múltipla Escolha, V/F, Associação (coluna A e B), Complete a Frase. Features combo streaks, sound-effect toggles, XP animations and detailed feedback with commented solutions"
+    },
+    {
+      "path": "frontend/src/components/gamification/MedalhasGallery.tsx",
+      "description": "Showcase of 7 official medals: 🥉 Aprendiz, 🥈 Explorador, 🥇 Cientista, 🏆 Mestre do Conhecimento, 🎯 Especialista em Matemática, 📖 Leitor Nota 10, 🔬 Jovem Pesquisador with unlock criteria, progress percentage and celebratory modal"
+    },
+    {
+      "path": "frontend/src/components/gamification/Leaderboard.tsx",
+      "description": "Rankings view with tabs (Diário, Semanal, Mensal, Geral) and scopes (Minha Turma, Minha Escola, Ranking Estadual SP) with podium avatars and rank badges"
+    },
+    {
+      "path": "frontend/src/components/enem/MissaoEnem.tsx",
+      "description": "Simulado ENEM module covering: Linguagens e Códigos, Matemática e suas Tecnologias, Ciências da Natureza, Ciências Humanas, and Laboratório de Redação com cronômetro oficial (05:00:00 e 05:30:00) e análise de desempenho por competência TRI"
+    },
+    {
+      "path": "frontend/src/components/central/CentralEstudos.tsx",
+      "description": "Study library with curated materials: Apostilas SEDUC-SP (Aprender Sempre, Caderno do Aluno), Slides interativos, PDFs, Links úteis, with search by discipline, grade, and keyword"
+    },
+    {
+      "path": "frontend/src/components/mural/MuralFeed.tsx",
+      "description": "Educational multimedia wall: Educational comics (tirinhas), infographics, bite-sized vertical video player (< 3 min), pinned school announcements, with filter tabs and admin upload/schedule modal"
+    },
+    {
+      "path": "frontend/src/components/tutor/MiltonTutorChat.tsx",
+      "description": "Interactive AI pedagogical tutor powered by LLM backend with student-grade tone adapter, prompt chips (Explicar como se eu tivesse 12 anos, Gerar 3 questões treino, Resumir este texto, Gerar mapa mental), and voice input/output"
+    },
+    {
+      "path": "frontend/src/components/teacher/TeacherDashboard.tsx",
+      "description": "Teacher workstation to build quizzes, auto-generate BNCC questions with Milton I.A, publish study guides to classes, and inspect real-time performance analytics per class/student"
+    },
+    {
+      "path": "frontend/src/components/manager/ManagerDashboard.tsx",
+      "description": "Administrative control center with custom School Name & School Logo editor, student/teacher user roster, class engagement KPIs, daily active user charts (Recharts), and SEDUC-SP curriculum coverage report"
+    }
+  ],
+  "image_urls": [
+    {
+      "category": "hero_and_students",
+      "url": "https://images.unsplash.com/photo-1780536301160-5acf9fce398d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NDh8MHwxfHNlYXJjaHwzfHxoaWdoJTIwc2Nob29sJTIwc3R1ZGVudCUyMGxlYXJuaW5nJTIwdGFibGV0fGVufDB8fHx8MTc5MzkwNjI2M3ww&ixlib=rb-4.1.0&q=85",
+      "description": "Estudantes engajados em sala de aula utilizando dispositivos digitais para aprendizado gamificado"
+    },
+    {
+      "category": "student_studying",
+      "url": "https://images.unsplash.com/photo-1646756089735-487709743361?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NDh8MHwxfHNlYXJjaHwxfHxoaWdoJTIwc2Nob29sJTIwc3R1ZGVudCUyMGxlYXJuaW5nJTIwdGFibGV0fGVufDB8fHx8MTc5MzkwNjI2M3ww&ixlib=rb-4.1.0&q=85",
+      "description": "Estudante focado em notebook realizando trilha e simulado"
+    },
+    {
+      "category": "school_campus",
+      "url": "https://images.unsplash.com/photo-1744979983790-5768fc8b96e7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxlZHVjYXRpb24lMjBzY2hvb2wlMjBidWlsZGluZyUyMGxvZ28lMjBjYW1wdXN8ZW58MHx8fHwxNzkzOTA2MjYzfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Edifício escolar moderno representando a infraestrutura da instituição pública ou privada de ensino"
+    }
+  ],
+  "visual_enhancers": {
+    "gamification_buttons": "Duolingo-style 3D tactile buttons with 4px bottom border offset (e.g. `border-b-4 active:border-b-0 active:translate-y-1 transition-all rounded-2xl shadow-sm`)",
+    "card_borders": "Subtle 1px border with crisp `rounded-2xl` and slight top highlight for elevated tactile feel",
+    "mascot_badges": "Milton I.A robot mascot avatar with friendly animated pulse rings and status lights for live guidance",
+    "particles_and_confetti": "CSS/Canvas confetti bursts upon Quiz completion or Medal unlock",
+    "accessibility_focus": "High visibility 3px focus rings (`focus-visible:ring-3 focus-visible:ring-indigo-500`) for complete keyboard navigation"
+  },
+  "motion": {
+    "quiz_option_tap": "Scale down to 0.98 on press, pop back on release with instant green/red border feedback",
+    "xp_counter": "Staggered numeric count-up animation when points are awarded",
+    "streak_fire": "Gentle pulsating flame SVG motion on daily streak icon",
+    "modal_transitions": "Smooth spring-based scale and fade in/out using motion/react",
+    "prefers_reduced_motion": "All kinetic animations must be disabled when user prefers reduced motion or turns on Simplified Navigation"
+  },
+  "accessibility": {
+    "wcag_level": "WCAG 2.1 AA & partial AAA (High Contrast mode)",
+    "screen_reader_support": "Aria labels on all interactive icons (streak, xp, medals, timer, audio buttons)",
+    "text_to_speech": "Integrated Web Speech API (window.speechSynthesis) with pt-BR voice selector for reading quiz questions and AI Tutor explanations",
+    "keyboard_navigation": "Logical tab indexing across questions (keys 1-4 for options, Enter for confirm, Space for next)",
+    "font_resizing": "Dynamic root CSS variables `--app-font-multiplier` for seamless instant 100%, 115%, 130% scaling without layout break"
+  },
+  "instructions_to_main_agent": [
+    "Implement the complete Milton I.A educational ecosystem in Portuguese (Brazil) with extreme attention to detail, modern Duolingo/Quizizz/Khan Academy gamification feel, and full compliance with BNCC / Currículo Paulista (SEDUC-SP).",
+    "Ensure both Light Mode and Dark Mode look pristine, with rich contrast and a dedicated High Contrast (Preto/Amarelo) accessibility preset.",
+    "Make School Logo and School Name fully customizable in Gestor settings and instantly reactive across the whole application.",
+    "Include pre-seeded sample data for all 6º-9º Ensino Fundamental and 1ª-3ª Ensino Médio series, with rich questions, BNCC codes (e.g., EF08MA01, EM13LP02), Simulados ENEM, and study library documents (SEDUC-SP Aprender Sempre).",
+    "Integrate the Milton I.A AI Tutor with interactive pre-configured prompt helpers and streaming chat simulation with curriculum-aligned tone.",
+    "Add full role simulation (Estudante, Professor, Gestor) switchable easily with one click in the header/login so all features can be demonstrated effortlessly.",
+    "Include sound effects (synthesized with Web Audio API or audio elements) for correct/wrong answers and level ups, with a mute toggle in settings.",
+    "Every single interactive button, input, tab, card, and metric must include explicit `data-testid` attributes (e.g., `data-testid=\"btn-iniciar-quiz\"`, `data-testid=\"select-serie-filtro\"`, `data-testid=\"counter-xp-total\"`)."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": {
+    "anti_slop": "Do not create empty generic centered layouts. Use tactile asymmetric bento cards, colorful progress pills, live avatar rankings, and genuine educational content in Brazilian Portuguese.",
+    "ui_richness": "Ensure rich visual depth with 3D tactile buttons, medal showcases, streak flames, interactive charts, and accessible toolbars.",
+    "test_readiness": "All interactive triggers must have kebab-case `data-testid`."
+  }
+}
