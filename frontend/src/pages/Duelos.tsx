@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Clock, Swords, Trophy, X } from "lucide-react";
+import { Check, Clock, RotateCcw, Swords, Trophy, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,9 @@ function hoursLeft(iso: string) {
   return h <= 1 ? "menos de 1h" : `${h}h`;
 }
 
-function DuelCard({ d, onPlay, onAccept, onDecline, busy }: { d: Duel; onPlay: (id: string) => void; onAccept: (id: string) => void; onDecline: (id: string) => void; busy: boolean }) {
+interface CardActions { onPlay: (id: string) => void; onAccept: (id: string) => void; onDecline: (id: string) => void; onRematch: (id: string) => void; busy: boolean }
+
+function DuelCard({ d, onPlay, onAccept, onDecline, onRematch, busy }: { d: Duel } & CardActions) {
   const rival = d.my_side === "challenger" ? d.opponent_name : d.challenger_name;
   const finished = d.status === "done" || d.status === "expired";
   return (
@@ -53,6 +55,11 @@ function DuelCard({ d, onPlay, onAccept, onDecline, busy }: { d: Duel; onPlay: (
         {!d.can_accept && !d.my_done && d.my_attempt_id && (d.status === "pending" || d.status === "active") && (
           <Button size="sm" className="btn-3d" onClick={() => onPlay(d.my_attempt_id!)} data-testid={`duel-play-${d.id}`}><Swords /> Jogar minha parte</Button>
         )}
+        {d.can_rematch && (
+          <Button size="sm" className="btn-3d bg-ruby hover:bg-ruby/90 text-white" disabled={busy} onClick={() => onRematch(d.id)} data-testid={`duel-rematch-${d.id}`}>
+            <RotateCcw /> Revanche
+          </Button>
+        )}
         {d.my_done && !finished && <p className="text-xs text-muted-foreground">Sua parte foi enviada — aguardando {rival.split(" ")[0]} (até 24h). Se não responder, você vence por W.O.</p>}
       </div>
     </div>
@@ -77,13 +84,15 @@ export default function Duelos() {
   const go = (a: Attempt) => { void qc.invalidateQueries({ queryKey: ["duels"] }); nav(`/quiz/${a.id}`); };
   const create = useMutation({ mutationFn: (b: DuelIn) => apiPost<Attempt>("/duels", b), onSuccess: (a) => { toast.success("Desafio enviado! Agora jogue sua parte."); go(a); }, onError: (e) => toast.error(errorMessage(e)), onSettled: () => setPreparing("") });
   const accept = useMutation({ mutationFn: (id: string) => apiPost<Attempt>(`/duels/${id}/accept`), onSuccess: go, onError: (e) => toast.error(errorMessage(e)) });
+  const rematch = useMutation({ mutationFn: (id: string) => apiPost<Attempt>(`/duels/${id}/rematch`), onSuccess: (a) => { toast.success("Revanche enviada! Jogue sua parte."); go(a); }, onError: (e) => toast.error(errorMessage(e)), onSettled: () => setPreparing("") });
   const decline = useMutation({ mutationFn: (id: string) => apiPost(`/duels/${id}/decline`), onSuccess: () => { toast("Desafio recusado"); void qc.invalidateQueries({ queryKey: ["duels"] }); } });
 
   const list = duels.data ?? [];
   const open = list.filter((d) => d.status === "pending" || d.status === "active");
   const closed = list.filter((d) => !open.includes(d));
   const wins = list.filter((d) => d.i_won).length;
-  const busy = create.isPending || accept.isPending || decline.isPending;
+  const busy = create.isPending || accept.isPending || decline.isPending || rematch.isPending;
+  const actions: CardActions = { busy, onPlay: (id) => nav(`/quiz/${id}`), onAccept: (id) => accept.mutate(id), onDecline: (id) => decline.mutate(id), onRematch: (id) => { setPreparing("Preparando a revanche"); rematch.mutate(id); } };
 
   return (
     <div>
@@ -123,13 +132,13 @@ export default function Duelos() {
           <section>
             <h2 className="font-heading font-bold text-lg mb-2">Em andamento</h2>
             {duels.isLoading ? <Skeleton className="h-28" /> : open.length === 0 ? <EmptyState title="Nenhum duelo em andamento" hint="Desafie um colega ao lado!" testid="duels-open-empty" /> : (
-              <div className="space-y-3" data-testid="duels-open-list">{open.map((d) => <DuelCard key={d.id} d={d} busy={busy} onPlay={(id) => nav(`/quiz/${id}`)} onAccept={(id) => accept.mutate(id)} onDecline={(id) => decline.mutate(id)} />)}</div>
+              <div className="space-y-3" data-testid="duels-open-list">{open.map((d) => <DuelCard key={d.id} d={d} {...actions} />)}</div>
             )}
           </section>
           {closed.length > 0 && (
             <section>
               <h2 className="font-heading font-bold text-lg mb-2">Encerrados</h2>
-              <div className="space-y-3" data-testid="duels-closed-list">{closed.map((d) => <DuelCard key={d.id} d={d} busy={busy} onPlay={() => undefined} onAccept={() => undefined} onDecline={() => undefined} />)}</div>
+              <div className="space-y-3" data-testid="duels-closed-list">{closed.map((d) => <DuelCard key={d.id} d={d} {...actions} />)}</div>
             </section>
           )}
         </div>

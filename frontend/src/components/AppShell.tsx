@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import AccessibilityMenu, { ThemeToggle } from "@/components/AccessibilityMenu";
 import { Avatar, MiltonMark, SchoolLogo, Skeleton } from "@/components/common";
 import { ApiError } from "@/lib/api";
-import { useMe, useSchool } from "@/lib/hooks";
+import { pendingChallenges, useDuels, useMe, useSchool } from "@/lib/hooks";
 import { endSession } from "@/lib/session";
 import { ROLE_LABEL, type Role, type User } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -51,7 +51,7 @@ const NAV: Record<Role, NavItem[]> = {
   ],
 };
 
-function NavList({ items, onNavigate }: { items: NavItem[]; onNavigate?: () => void }) {
+function NavList({ items, onNavigate, badges = {} }: { items: NavItem[]; onNavigate?: () => void; badges?: Record<string, number> }) {
   return (
     <nav className="flex flex-col gap-1" aria-label="Navegação principal">
       {items.map((it) => (
@@ -61,6 +61,10 @@ function NavList({ items, onNavigate }: { items: NavItem[]; onNavigate?: () => v
             isActive ? "bg-accent text-accent-foreground ring-1 ring-brand/30" : "text-muted-foreground hover:bg-muted hover:text-foreground",
           )}>
           {it.icon}{it.label}
+          {!!badges[it.id] && (
+            <span className="ml-auto min-w-5 h-5 px-1.5 rounded-full bg-ruby text-white text-[11px] font-bold grid place-items-center animate-pop" data-testid={`nav-badge-${it.id}`}
+              aria-label={`${badges[it.id]} novo(s)`}>{badges[it.id]}</span>
+          )}
         </NavLink>
       ))}
     </nav>
@@ -103,6 +107,9 @@ export default function AppShell() {
   const school = useSchool();
   const loc = useLocation();
   const [open, setOpen] = useState(false);
+  const duels = useDuels(me.data?.role === "student");
+  const pending = pendingChallenges(duels.data).length;
+  const badges = { duelos: pending };
 
   if (me.isError && me.error instanceof ApiError && me.error.status === 401) {
     return <Navigate to="/login" replace state={{ from: loc.pathname }} />;
@@ -123,7 +130,7 @@ export default function AppShell() {
           </div>
         </Link>
         <MiltonMark />
-        <NavList items={items} />
+        <NavList items={items} badges={badges} />
         {user?.role !== "guardian" && <div className="mt-auto card-tactile p-4 bg-tutor/10 decor">
           <p className="text-sm font-bold flex items-center gap-2"><Bot className="size-4 text-tutor" /> Dúvida agora?</p>
           <p className="text-xs text-muted-foreground mt-1">O Milton I.A Tutor explica qualquer conteúdo no seu nível.</p>
@@ -134,7 +141,9 @@ export default function AppShell() {
       <div className="min-w-0 flex flex-col">
         <header className="sticky top-0 z-30 glass border-b">
           <div className="flex items-center gap-2 px-4 md:px-6 h-16">
-            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Abrir menu" data-testid="mobile-menu-button" onClick={() => setOpen(true)}><Menu /></Button>
+            <Button variant="ghost" size="icon" className="lg:hidden relative" aria-label="Abrir menu" data-testid="mobile-menu-button" onClick={() => setOpen(true)}>
+              <Menu />{pending > 0 && <span className="absolute top-1 right-1 size-2.5 rounded-full bg-ruby ring-2 ring-background" data-testid="mobile-menu-badge" />}
+            </Button>
             <div className="lg:hidden flex items-center gap-2 min-w-0">
               <SchoolLogo school={school} size={32} />
               <MiltonMark className="[&_span:last-child]:text-lg" />
@@ -164,7 +173,7 @@ export default function AppShell() {
               <SchoolLogo school={school} size={40} />
               <div className="text-sm font-bold">{school.name}</div>
             </div>
-            <NavList items={items} onNavigate={() => setOpen(false)} />
+            <NavList items={items} badges={badges} onNavigate={() => setOpen(false)} />
           </SheetContent>
         </Sheet>
 

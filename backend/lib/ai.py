@@ -154,15 +154,17 @@ async def generate_curriculum_questions(topic: dict, grade_label: str, n: int, t
 
 
 async def generate_enem_questions(area_label: str, n: int) -> list[dict]:
+    n = max(n, 3)  # every batch needs room for one image question
     sizes = [5] * (n // 5) + ([n % 5] if n % 5 else [])
     prompts = [
         f"Crie {s} questões no estilo das provas anteriores do ENEM (INEP) para a área {area_label}. Cada questão deve ter "
         f"texto-base contextualizado (situação-problema, trecho, dado ou gráfico descrito) dentro do enunciado e 5 alternativas "
         f"(type multiple_choice, options com 5 itens iniciando por 'A) ', 'B) ' etc). Cubra competências variadas (lote {i + 1}). "
-        f"{QUESTION_FORMAT} Aqui todas devem ser multiple_choice com 5 opções e image_prompt vazio."
+        f"{QUESTION_FORMAT} Aqui todas devem ser multiple_choice com 5 opções."
+        f"{IMAGE_RULE + ' Como no ENEM real, a imagem pode ser mapa, gráfico, charge, tabela, infográfico ou esquema.' if s >= 3 else ' image_prompt sempre vazio.'}"
         for i, s in enumerate(sizes)
     ]
-    results = await asyncio.gather(*[_batch(p) for p in prompts])
+    results = await asyncio.gather(*[_batch(p, True) for p in prompts])
     return [q for r in results for q in r]
 
 

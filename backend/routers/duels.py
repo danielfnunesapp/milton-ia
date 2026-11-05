@@ -28,6 +28,7 @@ def _view(d: dict, uid: str, names: dict) -> Duel:
         winner_name=names.get(d.get("winner_id") or "") if finished else None,
         i_won=finished and d.get("winner_id") == uid, my_attempt_id=d.get(f"{side}_attempt_id"),
         my_done=my_score is not None, can_accept=side == "opponent" and d["status"] == "pending",
+        can_rematch=finished and d.get("winner_id") != uid and not d.get("rematched_by", {}).get(uid),
         bonus_xp=DUEL_BONUS, expires_at=_utc(d["expires_at"]), created_at=_utc(d["created_at"]),
     )
 
@@ -56,23 +57,42 @@ async def list_duels(user: dict = Depends(student_only)):
 
 @router.post("", response_model=Attempt)
 async def create_duel(body: DuelIn, user: dict = Depends(student_only)):
-    opp = await db.users.find_one({"id": body.opponent_id, "role": "student"}, {"_id": 0})
+    return await _new_duel(user, body.opponent_id, body.topic_id)
+
+
+@router.post("/{duel_id}/rematch", response_model=Attempt)
+async def rematch(duel_id: str, user: dict = Depends(student_only)):
+    d = await db.duels.find_one({"id": duel_id, "$or": [{"challenger_id": user["id"]}, {"opponent_id": user["id"]}]}, {"_id": 0})
+    if not d:
+        raise HTTPException(404, "Duelo não encontrado")
+    if d["status"] not in ("done", "expired") or d.get("winner_id") == user["id"]:
+        raise HTTPException(409, "A revanche é para quem não venceu um duelo encerrado")
+    if d.get("rematched_by", {}).get(user["id"]):
+        raise HTTPException(409, "Você já pediu revanche deste duelo")
+    rival = d["opponent_id"] if d["challenger_id"] == user["id"] else d["challenger_id"]
+    att = await _new_duel(user, rival, d["topic_id"], rematch_of=duel_id)
+    await db.duels.update_one({"id": duel_id}, {"$set": {f"rematched_by.{user['id']}": True}})
+    return att
+
+
+async def _new_duel(user: dict, opponent_id: str, topic_id: str, rematch_of: str | None = None) -> Attempt:
+    opp = await db.users.find_one({"id": opponent_id, "role": "student"}, {"_id": 0})
     if not opp or opp["id"] == user["id"]:
         raise HTTPException(404, "Colega não encontrado")
-    topic = find_topic(body.topic_id)
+    topic = find_topic(topic_id)
     if not topic:
         raise HTTPException(404, "Tópico não encontrado")
     qs = await topic_questions(topic, DUEL_SIZE)
     now = datetime.now(timezone.utc)
     duel_id = str(uuid.uuid4())
-    att = await create_attempt(user, qs, kind="duel", duel_id=duel_id, title=f"Duelo · {topic['subject']}",
+    att = await create_attempt(user, qs, kind="duel", duel_id=duel_id, title=f"{'Revanche' if rematch_of else 'Duelo'} · {topic['subject']}",
                                subtitle=f"vs {opp['name']} · {topic['objeto']}", subject=topic["subject"], mode="duel",
                                topic_id=topic["id"], time_limit_sec=None)
     await db.duels.insert_one({
         "id": duel_id, "challenger_id": user["id"], "opponent_id": opp["id"], "topic_id": topic["id"], "subject": topic["subject"],
         "topic_label": f"{topic['habilidade']} · {topic['objeto']}", "question_ids": [q["id"] for q in qs], "status": "pending",
         "challenger_attempt_id": att["id"], "opponent_attempt_id": None, "challenger_score": None, "opponent_score": None,
-        "winner_id": None, "created_at": now, "expires_at": now + timedelta(hours=DUEL_HOURS),
+        "winner_id": None, "created_at": now, "expires_at": now + timedelta(hours=DUEL_HOURS), "rematch_of": rematch_of,
     })
     return Attempt(**att)
 

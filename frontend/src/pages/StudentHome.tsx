@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Bot, Flame, GraduationCap, Images, Map, Target, Trophy, Zap } from "lucide-react";
+import { Bot, Flame, GraduationCap, Images, Map, Swords, Target, Trophy, Zap } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Avatar, CountUp, ProgressBar, SchoolLogo, Skeleton } from "@/components/common";
 import { apiGet } from "@/lib/api";
-import { useSchool } from "@/lib/hooks";
+import { pendingChallenges, useDuels, useSchool } from "@/lib/hooks";
 import { GRADE_SHORT, type Progress, type RankingEntry } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -20,11 +20,25 @@ export default function StudentHome() {
   const prog = useQuery({ queryKey: ["progress"], queryFn: () => apiGet<Progress>("/me/progress") });
   const rank = useQuery({ queryKey: ["rankings", "weekly", "class"], queryFn: () => apiGet<RankingEntry[]>("/rankings?period=weekly&scope=class") });
   const p = prog.data;
+  const challenges = pendingChallenges(useDuels(true).data);
   const todayXp = p?.frequency.at(-1)?.xp ?? 0;
   const goal = 50;
 
   return (
     <div className="space-y-6">
+      {challenges.length > 0 && (
+        <Link to="/duelos" className="card-tactile hoverable p-4 flex items-center gap-4 border-ruby/40 bg-ruby/10 animate-pop" data-testid="home-duel-challenge-banner">
+          <span className="relative size-12 rounded-2xl bg-ruby text-white grid place-items-center shrink-0">
+            <Swords className="size-6" />
+            <span className="absolute -top-1.5 -right-1.5 min-w-6 h-6 px-1 rounded-full bg-xp text-black text-xs font-extrabold grid place-items-center ring-2 ring-background" data-testid="home-duel-badge">{challenges.length}</span>
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-heading font-bold">{challenges.length === 1 ? `${challenges[0].challenger_name.split(" ")[0]} desafiou você para um duelo!` : `Você tem ${challenges.length} desafios de duelo esperando!`}</span>
+            <span className="block text-sm text-muted-foreground truncate">{challenges[0].subject} · {challenges[0].topic_label} · vale +{challenges[0].bonus_xp} XP para quem vencer</span>
+          </span>
+          <span className="hidden sm:inline-flex font-bold text-ruby">Aceitar →</span>
+        </Link>
+      )}
       <section className="grid lg:grid-cols-[1.6fr_1fr] gap-5">
         <div className="card-tactile p-6 md:p-8 relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-2 school-stripe" aria-hidden />

@@ -25,13 +25,21 @@ async def start(body: EnemStartIn, user: dict = Depends(current_user)):
     async for a in db.attempts.find({"user_id": user["id"], "kind": "enem", "area": body.area}, {"question_ids": 1}):
         seen.update(a["question_ids"])
     fresh = [q for q in bank if q["id"] not in seen]
-    if len(fresh) < body.count:
-        gen = await generate_enem_questions(label, body.count - len(fresh))
+    want_img = max(1, body.count // 5)  # like the real exam: maps, charts and diagrams in every simulado
+    missing = max(body.count - len(fresh), 0)
+    if sum(1 for q in fresh if q.get("image_url")) < want_img:
+        missing = max(missing, 5)
+    if missing:
+        gen = await generate_enem_questions(label, missing)
         fresh += await save_questions(gen, {"scope": "enem", "area": body.area, "subject": label, "source": "ai"})
     pool = fresh if len(fresh) >= body.count else fresh + [q for q in bank if q not in fresh]
     if not pool:
         raise HTTPException(503, "Não foi possível montar o simulado agora. Tente novamente.")
-    qs = random.sample(pool, min(body.count, len(pool)))
+    imgs = [q for q in pool if q.get("image_url")]
+    picked = random.sample(imgs, min(want_img, len(imgs)))
+    rest = [q for q in pool if q not in picked]
+    qs = picked + random.sample(rest, min(body.count - len(picked), len(rest)))
+    random.shuffle(qs)
     att = await create_attempt(user, qs, kind="enem", title=f"Simulado ENEM · {label}", subtitle=f"{len(qs)} questões",
                                subject=label, area=body.area, mode=f"enem{body.count}", topic_id=None,
                                time_limit_sec=len(qs) * SEC_PER_QUESTION)

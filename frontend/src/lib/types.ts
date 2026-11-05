@@ -123,7 +123,7 @@ export interface Duel {
   id: string; subject: string; topic_label: string; challenger_name: string; opponent_name: string;
   my_side: "challenger" | "opponent"; status: "pending" | "active" | "done" | "declined" | "expired"; total: number;
   my_score: number | null; their_score: number | null; winner_name: string | null; i_won: boolean;
-  my_attempt_id: string | null; my_done: boolean; can_accept: boolean; bonus_xp: number; expires_at: string; created_at: string;
+  my_attempt_id: string | null; my_done: boolean; can_accept: boolean; can_rematch: boolean; bonus_xp: number; expires_at: string; created_at: string;
 }
 
 export interface ChildSummary {

@@ -459,6 +459,7 @@ class Duel(BaseModel):
     my_attempt_id: str | None
     my_done: bool
     can_accept: bool
+    can_rematch: bool
     bonus_xp: int
     expires_at: datetime
     created_at: datetime
